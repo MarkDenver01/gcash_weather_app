@@ -1,6 +1,6 @@
 package com.denver.weather_gcash_app.presentation.fragment.login;
 
-import com.denver.weather_gcash_app.domain.model.LoginModel;
+import com.denver.weather_gcash_app.domain.model.login.LoginModel;
 
 import dagger.Module;
 import dagger.Provides;

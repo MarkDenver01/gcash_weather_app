@@ -3,14 +3,11 @@ package com.denver.weather_gcash_app.data.repository.local;
 import androidx.lifecycle.LiveData;
 
 import com.denver.weather_gcash_app.data.local.AppDatabase;
-import com.denver.weather_gcash_app.data.local.db.entity.LoginEntity;
+import com.denver.weather_gcash_app.data.entity.LoginEntity;
 import com.denver.weather_gcash_app.domain.abstraction.LocalDataRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 
 @Singleton
 public class LocalDataRepositoryImpl implements LocalDataRepository {

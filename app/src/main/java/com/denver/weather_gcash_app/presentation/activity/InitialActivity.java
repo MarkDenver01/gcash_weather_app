@@ -1,4 +1,4 @@
-package com.denver.weather_gcash_app.presentation.activity.initial;
+package com.denver.weather_gcash_app.presentation.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -87,6 +87,7 @@ public class InitialActivity extends BaseActivity<ActivitySplashScreenBinding, L
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
+                        mLottieAnimationView.setAnimation(R.raw.android_logo);
                         mLottieAnimationView.animate().translationX(0).setDuration(2000).setStartDelay(4000);
                         mLogoDisposableTimer.dispose();
                     }
@@ -98,7 +99,7 @@ public class InitialActivity extends BaseActivity<ActivitySplashScreenBinding, L
                 });
 
         if (isLoggedIn()) {
-            mDisposableTimer = Observable.interval(500, 1000, TimeUnit.MILLISECONDS)
+            mDisposableTimer = Observable.interval(5000, 6000, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Long>() {

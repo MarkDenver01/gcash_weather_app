@@ -1,4 +1,4 @@
-package com.denver.weather_gcash_app.domain.model;
+package com.denver.weather_gcash_app.domain.model.login;
 
 import android.util.Patterns;
 

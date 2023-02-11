@@ -2,7 +2,7 @@ package com.denver.weather_gcash_app.presentation.base;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.denver.weather_gcash_app.data.local.db.entity.LoginEntity;
+import com.denver.weather_gcash_app.data.entity.LoginEntity;
 import com.denver.weather_gcash_app.data.repository.MainRepositoryImpl;
 
 import io.reactivex.disposables.CompositeDisposable;

@@ -1,4 +1,4 @@
-package com.denver.weather_gcash_app.data.local.db.entity;
+package com.denver.weather_gcash_app.data.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

@@ -1,6 +1,5 @@
 package com.denver.weather_gcash_app.presentation.fragment.register;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.denver.weather_gcash_app.R;
 import com.denver.weather_gcash_app.databinding.ItemTabRegistrationBinding;
-import com.denver.weather_gcash_app.domain.enums.LoginStatus;
+import com.denver.weather_gcash_app.domain.enums.AppStatus;
 import com.denver.weather_gcash_app.helper.CustomDialogBuilder;
 import com.denver.weather_gcash_app.presentation.base.BaseFragment;
 import com.denver.weather_gcash_app.presentation.viewmodel.LoginViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.jakewharton.rxbinding3.view.RxView;
-
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import kotlin.Unit;
 import timber.log.Timber;
 
 public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBinding, LoginViewModel> {
@@ -70,14 +62,14 @@ public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBin
     }
 
     private void initResult() {
-        getViewDataBinding().getLoginViewModel().getLoginStatusAsLiveData().observe(getViewLifecycleOwner(), new Observer<LoginStatus>() {
+        getViewDataBinding().getLoginViewModel().getLoginStatusAsLiveData().observe(getViewLifecycleOwner(), new Observer<AppStatus>() {
             @Override
-            public void onChanged(LoginStatus loginStatus) {
-                switch (loginStatus) {
+            public void onChanged(AppStatus appStatus) {
+                switch (appStatus) {
                     case SUCCESS:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.SUCCESS,
+                                AppStatus.SUCCESS,
                                 "Success!!",
                                 null
                         );
@@ -91,7 +83,7 @@ public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBin
                         };
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.ALREADY_EXIST,
+                                AppStatus.ALREADY_EXIST,
                                 "Account already\n exist!!",
                                 null
                         );
@@ -99,7 +91,7 @@ public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBin
                     case NOT_VALID_EMAIL:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.NOT_VALID_EMAIL,
+                                AppStatus.NOT_VALID_EMAIL,
                                 "Email not valid!",
                                 null
                         );
@@ -107,7 +99,7 @@ public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBin
                     case FILL_UP_ALL_FIELDS:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.FILL_UP_ALL_FIELDS,
+                                AppStatus.FILL_UP_ALL_FIELDS,
                                 "Some fields\n is/are empty!",
                                 null
                         );
@@ -115,7 +107,7 @@ public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBin
                     case PASSWORD_NOT_MATCH:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.PASSWORD_NOT_MATCH,
+                                AppStatus.PASSWORD_NOT_MATCH,
                                 "Password does\n not match!",
                                 null
                         );
@@ -123,7 +115,7 @@ public class ItemRegisterTabFragment extends BaseFragment<ItemTabRegistrationBin
                     case ERROR:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.ERROR,
+                                AppStatus.ERROR,
                                 "Unknown error!",
                                 null
                         );

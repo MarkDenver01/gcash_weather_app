@@ -2,10 +2,7 @@ package com.denver.weather_gcash_app.domain.abstraction;
 
 import androidx.lifecycle.LiveData;
 
-import com.denver.weather_gcash_app.data.local.db.entity.LoginEntity;
-import com.denver.weather_gcash_app.domain.model.LoginModel;
-
-import io.reactivex.Observable;
+import com.denver.weather_gcash_app.data.entity.LoginEntity;
 
 public interface LocalDataRepository {
     void insertLogin(LoginEntity loginEntity);

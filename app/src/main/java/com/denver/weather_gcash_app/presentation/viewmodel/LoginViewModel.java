@@ -4,10 +4,10 @@ package com.denver.weather_gcash_app.presentation.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.denver.weather_gcash_app.data.local.db.entity.LoginEntity;
+import com.denver.weather_gcash_app.data.entity.LoginEntity;
 import com.denver.weather_gcash_app.data.repository.MainRepositoryImpl;
-import com.denver.weather_gcash_app.domain.enums.LoginStatus;
-import com.denver.weather_gcash_app.domain.model.LoginModel;
+import com.denver.weather_gcash_app.domain.enums.AppStatus;
+import com.denver.weather_gcash_app.domain.model.login.LoginModel;
 import com.denver.weather_gcash_app.helper.Utils;
 import com.denver.weather_gcash_app.presentation.base.MainViewModel;
 
@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import dagger.Provides;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -38,7 +37,7 @@ public class LoginViewModel extends MainViewModel {
 
     private LoginModel loginModel;
 
-    private MutableLiveData<LoginStatus> loginStatusMutableLiveData;
+    private MutableLiveData<AppStatus> loginStatusMutableLiveData;
 
     @Inject
     public LoginViewModel(MainRepositoryImpl mainRepository) {
@@ -66,21 +65,21 @@ public class LoginViewModel extends MainViewModel {
                         if (!loginModel.isEmailValid()) {
                             Timber.tag(TAG).i("Invalid email address");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.NOT_VALID_EMAIL);
+                            loginStatusMutableLiveData.setValue(AppStatus.NOT_VALID_EMAIL);
                             return;
                         }
 
                         if (isEmpty()) {
                             Timber.tag(TAG).i("Invalid email address");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.FILL_UP_ALL_FIELDS);
+                            loginStatusMutableLiveData.setValue(AppStatus.FILL_UP_ALL_FIELDS);
                             return;
                         }
 
                         if (!getMainRepository().getDbRepository().isAccountExisting(loginModel.getEmail())) {
                             Timber.tag(TAG).i("Login failed");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.LOGIN_FAILED);
+                            loginStatusMutableLiveData.setValue(AppStatus.LOGIN_FAILED);
                             return;
                         }
 
@@ -88,7 +87,7 @@ public class LoginViewModel extends MainViewModel {
                                 .login(loginModel.getEmail(), loginModel.getPassword());
                         getMainRepository().getSharedPref().setIsLoggedIn(true);
                         Timber.tag(TAG).i("Success!");
-                        loginStatusMutableLiveData.setValue(LoginStatus.LOGIN_SUCCESS);
+                        loginStatusMutableLiveData.setValue(AppStatus.LOGIN_SUCCESS);
                         clearFields(true);
                         disposable.dispose();
 
@@ -99,7 +98,7 @@ public class LoginViewModel extends MainViewModel {
                     public void accept(Throwable throwable) throws Exception {
                         Timber.e(throwable);
                         getMainRepository().getSharedPref().setIsLoggedIn(false);
-                        loginStatusMutableLiveData.setValue(LoginStatus.ERROR);
+                        loginStatusMutableLiveData.setValue(AppStatus.ERROR);
                     }
                 });
     }
@@ -115,14 +114,14 @@ public class LoginViewModel extends MainViewModel {
                         if (!loginModel.isEmailValid()) {
                             Timber.tag(TAG).i("Invalid email address");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.NOT_VALID_EMAIL);
+                            loginStatusMutableLiveData.setValue(AppStatus.NOT_VALID_EMAIL);
                             return;
                         }
 
                         if (getMainRepository().getDbRepository().isAccountExisting(loginModel.getEmail())) {
                             Timber.tag(TAG).i("Account already exist");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.ALREADY_EXIST);
+                            loginStatusMutableLiveData.setValue(AppStatus.ALREADY_EXIST);
                             return;
                         }
 
@@ -130,14 +129,14 @@ public class LoginViewModel extends MainViewModel {
                                 && !password.getValue().equals(confirmPassword.getValue())) {
                             Timber.tag(TAG).i("Password not match");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.PASSWORD_NOT_MATCH);
+                            loginStatusMutableLiveData.setValue(AppStatus.PASSWORD_NOT_MATCH);
                             return;
                         }
 
                         if (isSomeFieldsNull()) {
                             Timber.tag(TAG).i("Some fields is/are null");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);
-                            loginStatusMutableLiveData.setValue(LoginStatus.FILL_UP_ALL_FIELDS);
+                            loginStatusMutableLiveData.setValue(AppStatus.FILL_UP_ALL_FIELDS);
                             return;
                         }
 
@@ -145,7 +144,7 @@ public class LoginViewModel extends MainViewModel {
                                 .insertLogin(new LoginEntity(loginModel.getEmail(), loginModel.getPassword()));
                         Timber.tag(TAG).i("Account created!");
                         getMainRepository().getSharedPref().setIsLoggedIn(false);
-                        loginStatusMutableLiveData.setValue(LoginStatus.SUCCESS);
+                        loginStatusMutableLiveData.setValue(AppStatus.SUCCESS);
                         clearFields(false);
                         disposable.dispose();
                     }
@@ -154,7 +153,7 @@ public class LoginViewModel extends MainViewModel {
                     public void accept(Throwable throwable) throws Exception {
                         Timber.e(throwable);
                         getMainRepository().getSharedPref().setIsLoggedIn(false);
-                        loginStatusMutableLiveData.setValue(LoginStatus.ERROR);
+                        loginStatusMutableLiveData.setValue(AppStatus.ERROR);
                     }
                 });
     }
@@ -191,7 +190,7 @@ public class LoginViewModel extends MainViewModel {
         return getMainRepository().getSharedPref().isLoggedIn();
     }
 
-    public LiveData<LoginStatus> getLoginStatusAsLiveData() {
+    public LiveData<AppStatus> getLoginStatusAsLiveData() {
         return loginStatusMutableLiveData;
     }
 }

@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,22 +13,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.denver.weather_gcash_app.R;
 import com.denver.weather_gcash_app.databinding.ItemTabLoginBinding;
-import com.denver.weather_gcash_app.domain.enums.LoginStatus;
+import com.denver.weather_gcash_app.domain.enums.AppStatus;
 import com.denver.weather_gcash_app.helper.CustomDialogBuilder;
 import com.denver.weather_gcash_app.presentation.activity.CurrentWeatherActivity;
 import com.denver.weather_gcash_app.presentation.base.BaseFragment;
 import com.denver.weather_gcash_app.presentation.viewmodel.LoginViewModel;
-import com.jakewharton.rxbinding3.view.RxView;
-
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import kotlin.Unit;
-import timber.log.Timber;
 
 public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, LoginViewModel> {
     @Inject
@@ -77,10 +66,10 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
     }
 
     private void initResult() {
-        getViewDataBinding().getLoginViewModel().getLoginStatusAsLiveData().observe(getViewLifecycleOwner(), new Observer<LoginStatus>() {
+        getViewDataBinding().getLoginViewModel().getLoginStatusAsLiveData().observe(getViewLifecycleOwner(), new Observer<AppStatus>() {
             @Override
-            public void onChanged(LoginStatus loginStatus) {
-                switch (loginStatus) {
+            public void onChanged(AppStatus appStatus) {
+                switch (appStatus) {
                     case LOGIN_SUCCESS:
                         Runnable runnable = new Runnable() {
                             @Override
@@ -92,7 +81,7 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
                         };
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.SUCCESS,
+                                AppStatus.SUCCESS,
                                 "Success!!",
                                 runnable
                         );
@@ -100,7 +89,7 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
                     case FILL_UP_ALL_FIELDS:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.FILL_UP_ALL_FIELDS,
+                                AppStatus.FILL_UP_ALL_FIELDS,
                                 "Some fields is/are empty!!",
                                 null
                         );
@@ -108,7 +97,7 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
                     case LOGIN_FAILED:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.LOGIN_FAILED,
+                                AppStatus.LOGIN_FAILED,
                                 "Failed!!",
                                 null
                         );
@@ -116,7 +105,7 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
                     case NOT_VALID_EMAIL:
                         CustomDialogBuilder.oneButtonDialogBox(
                                 getContext(),
-                                LoginStatus.NOT_VALID_EMAIL,
+                                AppStatus.NOT_VALID_EMAIL,
                                 "Invalid email!!",
                                 null
                         );

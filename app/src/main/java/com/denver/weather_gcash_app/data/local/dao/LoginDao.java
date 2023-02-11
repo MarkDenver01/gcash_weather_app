@@ -1,14 +1,11 @@
-package com.denver.weather_gcash_app.data.local.db.dao;
+package com.denver.weather_gcash_app.data.local.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.denver.weather_gcash_app.data.local.db.entity.LoginEntity;
-
-import io.reactivex.Observable;
-import io.reactivex.Single;
+import com.denver.weather_gcash_app.data.entity.LoginEntity;
 
 @Dao
 public interface LoginDao {

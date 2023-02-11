@@ -11,15 +11,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import com.denver.weather_gcash_app.R;
-import com.denver.weather_gcash_app.domain.enums.LoginStatus;
+import com.denver.weather_gcash_app.domain.enums.AppStatus;
 import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import kotlin.Unit;
 import timber.log.Timber;
 
@@ -27,7 +25,7 @@ public class CustomDialogBuilder {
     private static AlertDialog mAlertDialogMessage;
     private static Disposable mDisposableAlertDialogMessage;
 
-    public static void oneButtonDialogBox(Context context, LoginStatus loginStatus, String message, Runnable runnable) {
+    public static void oneButtonDialogBox(Context context, AppStatus appStatus, String message, Runnable runnable) {
         if (mAlertDialogMessage != null && mAlertDialogMessage.isShowing()) {
             return;
         }
@@ -35,8 +33,12 @@ public class CustomDialogBuilder {
         final View alertDialogView = factory.inflate(R.layout.custom_alert_dialog, null);
 
         ImageView resource = alertDialogView.findViewById(R.id.image_alert);
-        if (loginStatus.equals(LoginStatus.SUCCESS)) {
+        if (appStatus.equals(AppStatus.SUCCESS)) {
             resource.setImageDrawable(context.getDrawable(R.drawable.check_alert));
+        } else if (appStatus.equals(AppStatus.NO_PERMISSION_ALLOWED)) {
+            resource.setImageDrawable(context.getDrawable(R.drawable.no_location));
+        } else if (appStatus.equals(AppStatus.LOCATION_REQUEST_WARNING)) {
+            resource.setImageDrawable(context.getDrawable(R.drawable.warning));
         } else {
             resource.setImageDrawable(context.getDrawable(R.drawable.close));
         }

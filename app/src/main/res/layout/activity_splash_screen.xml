@@ -23,8 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="-1"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="android_logo.json" />
+            app:lottie_autoPlay="true" />
 
         <com.cuberto.liquid_swipe.LiquidPager
             android:id="@+id/pager"
