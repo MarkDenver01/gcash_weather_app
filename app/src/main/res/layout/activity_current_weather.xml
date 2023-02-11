@@ -232,7 +232,7 @@
         android:layout_margin="10dp"
         android:text=" Next 15 Days"
         android:textColor="@color/white"
-        android:background="@drawable/button_radius"
+        android:background="@drawable/button_act"
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"

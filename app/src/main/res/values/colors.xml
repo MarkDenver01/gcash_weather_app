@@ -25,4 +25,8 @@
     <color name="alert_success">#4A148C</color>
     <color name="alert_border">#757575</color>
     <color name="alert_background">#F5F5F5</color>
+    <color name="button_border_nice">#CE93D8</color>
+    <color name="button_effect_1">#BA68C8</color>
+    <color name="button_effect_2">#AB47BC</color>
+    <color name="button_effect_3">#9C27B0</color>
 </resources>

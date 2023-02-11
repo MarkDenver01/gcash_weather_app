@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,7 @@ import timber.log.Timber;
 
 public class ThirdBoardFragment extends Fragment {
     private LottieAnimationView mLottieRainy;
-    private FloatingActionButton mBtnNext;
+    private Button mBtnNext;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override

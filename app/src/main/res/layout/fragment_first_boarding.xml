@@ -8,39 +8,29 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="cloudy.json"
-        app:lottie_loop="true"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias=".4"/>
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView"-->
-<!--        android:layout_width="200dp"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:src="@drawable/board_1_opacity"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias=".4" />-->
+        app:layout_constraintVertical_bias=".2"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="cloudy.json"
+        app:lottie_loop="true" />
 
     <ImageView
+        android:id="@+id/imageView3"
         android:layout_width="50dp"
         android:layout_height="10dp"
-        android:src="@drawable/tab1"
         android:layout_marginLeft="20dp"
-        app:layout_constraintVertical_bias="0.9"
-        app:layout_constraintHorizontal_bias="0"
+        android:src="@drawable/tab1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.9" />
 
     <TextView
         android:id="@+id/textView2"
@@ -53,25 +43,51 @@
         android:textSize="42sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/frame_1"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="20dp"
-        android:text="Skip"
+        android:layout_gravity="start"
+        android:text="
+        Cloudy weather refers to condition where\n
+        at least half - but not all -of the sky is\n
+        covered in clouds. Cloudy condition can\n
+        happen for a wide variety of reasons, though\n
+        they're typically the result of local or\n
+        regional low pressure."
         android:textColor="@color/text_board"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/frame_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:background="@drawable/button_effect"
+        android:text="Skip"
+        android:textColor="@color/text_board"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.920"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="1"/>
+        app:layout_constraintVertical_bias="0.970" />
+
+    <FrameLayout
+        android:id="@+id/frame_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
