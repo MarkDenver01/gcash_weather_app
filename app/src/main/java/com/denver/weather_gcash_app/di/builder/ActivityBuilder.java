@@ -1,6 +1,7 @@
 package com.denver.weather_gcash_app.di.builder;
 
 import com.denver.weather_gcash_app.presentation.activity.MainActivity;
+import com.denver.weather_gcash_app.presentation.activity.initial.InitialActivity;
 import com.denver.weather_gcash_app.presentation.fragment.login.ItemLoginTabFragmentProvider;
 import com.denver.weather_gcash_app.presentation.fragment.register.ItemRegisterTabFragmentProvider;
 
@@ -14,4 +15,7 @@ public abstract class ActivityBuilder {
             ItemRegisterTabFragmentProvider.class,
     })
     public abstract MainActivity contributeMainActivity();
+
+    @ContributesAndroidInjector
+    public abstract InitialActivity contributeInitialActivity();
 }

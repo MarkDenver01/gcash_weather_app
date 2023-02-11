@@ -16,8 +16,8 @@ public abstract class BaseActivity<D extends ViewDataBinding, V extends BaseView
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataBinding = DataBindingUtil.setContentView(this, getLayoutId());
-        dataBinding.setLifecycleOwner(this);
         viewModel = initViewModel();
+        getDataBinding().setLifecycleOwner(this);
     }
 
     public abstract int getLayoutId();

@@ -2,15 +2,19 @@ package com.denver.weather_gcash_app.di.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.room.Room;
 
+import com.denver.weather_gcash_app.R;
 import com.denver.weather_gcash_app.data.local.AppDatabase;
+import com.denver.weather_gcash_app.data.local.preference.PreferenceManager;
 import com.denver.weather_gcash_app.data.repository.MainRepositoryImpl;
 import com.denver.weather_gcash_app.data.repository.local.LocalDataRepositoryImpl;
 import com.denver.weather_gcash_app.di.DatabaseInfo;
 import com.denver.weather_gcash_app.domain.abstraction.LocalDataRepository;
 import com.denver.weather_gcash_app.domain.abstraction.MainRepository;
+import com.denver.weather_gcash_app.domain.abstraction.SharedPrefsData;
 import com.denver.weather_gcash_app.helper.Constants;
 
 import javax.inject.Singleton;
@@ -83,5 +87,17 @@ public class AppModule {
     @Singleton
     public static MainRepository provideMainRepository(MainRepositoryImpl mainRepository) {
         return mainRepository;
+    }
+
+    @Provides
+    @Singleton
+    public static SharedPrefsData provideSharedData(PreferenceManager preferenceManager) {
+        return preferenceManager;
+    }
+
+    @Provides
+    @Singleton
+    public static SharedPreferences provideSharedPreferences(Context context) {
+        return context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE);
     }
 }
