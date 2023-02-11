@@ -3,8 +3,8 @@ package com.denver.weather_gcash_app.domain.model;
 import android.util.Patterns;
 
 public class LoginModel {
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
     public LoginModel(String email, String password) {
         this.email = email;
@@ -27,5 +27,9 @@ public class LoginModel {
 
     public boolean isEmailValid() {
         return Patterns.EMAIL_ADDRESS.matcher(getEmail()).matches();
+    }
+
+    public LoginModel clear() {
+        return new LoginModel(null, null);
     }
 }

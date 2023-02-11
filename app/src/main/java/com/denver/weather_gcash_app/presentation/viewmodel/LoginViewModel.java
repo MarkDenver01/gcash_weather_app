@@ -1,7 +1,6 @@
 package com.denver.weather_gcash_app.presentation.viewmodel;
 
 
-import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,15 +8,15 @@ import com.denver.weather_gcash_app.data.local.db.entity.LoginEntity;
 import com.denver.weather_gcash_app.data.repository.MainRepositoryImpl;
 import com.denver.weather_gcash_app.domain.enums.LoginStatus;
 import com.denver.weather_gcash_app.domain.model.LoginModel;
+import com.denver.weather_gcash_app.helper.Utils;
 import com.denver.weather_gcash_app.presentation.base.MainViewModel;
-import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import dagger.Provides;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -27,9 +26,17 @@ import timber.log.Timber;
 
 
 public class LoginViewModel extends MainViewModel {
+    private static final String TAG = "LOG_IN";
     private Disposable disposable = new CompositeDisposable();
+    // register
     public MutableLiveData<String> email = new MutableLiveData<>();
     public MutableLiveData<String> password = new MutableLiveData<>();
+    public MutableLiveData<String> confirmPassword = new MutableLiveData<>();
+    //login
+    public MutableLiveData<String> loginEmail = new MutableLiveData<>();
+    public MutableLiveData<String> loginPassword = new MutableLiveData<>();
+
+    private LoginModel loginModel;
 
     private MutableLiveData<LoginStatus> loginStatusMutableLiveData;
 
@@ -47,7 +54,49 @@ public class LoginViewModel extends MainViewModel {
         }
     }
 
-    public void login(String email, String password) {
+    public void onLoginClicked() {
+        disposable = Observable.timer(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        loginModel = new LoginModel(loginEmail.getValue(), loginPassword.getValue());
+                        Timber.tag("xxxxxx").e("xxxx e: " + loginModel.getEmail() + " p : " + loginModel.getPassword());
+                        if (!loginModel.isEmailValid()) {
+                            Timber.tag(TAG).i("Invalid email address");
+                            loginStatusMutableLiveData.setValue(LoginStatus.NOT_VALID_EMAIL);
+                            return;
+                        }
+
+                        if (isEmpty()) {
+                            Timber.tag(TAG).i("Invalid email address");
+                            loginStatusMutableLiveData.setValue(LoginStatus.FILL_UP_ALL_FIELDS);
+                            return;
+                        }
+
+                        if (!getMainRepository().getDbRepository().isAccountExisting(loginModel.getEmail())) {
+                            Timber.tag(TAG).i("Login failed");
+                            loginStatusMutableLiveData.setValue(LoginStatus.LOGIN_FAILED);
+                            return;
+                        }
+
+                        getMainRepository().getDbRepository()
+                                        .login(loginModel.getEmail(), loginModel.getPassword());
+                        Timber.tag(TAG).i("Success!");
+                        loginStatusMutableLiveData.setValue(LoginStatus.LOGIN_SUCCESS);
+                        clearFields(true);
+                        disposable.dispose();
+
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        loginStatusMutableLiveData.setValue(LoginStatus.ERROR);
+                    }
+                });
     }
 
     public void onRegisterClicked() {
@@ -57,20 +106,37 @@ public class LoginViewModel extends MainViewModel {
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        LoginModel loginModel = new LoginModel(email.getValue(), password.getValue());
+                        loginModel = new LoginModel(email.getValue(), password.getValue());
                         if (!loginModel.isEmailValid()) {
+                            Timber.tag(TAG).i("Invalid email address");
                             loginStatusMutableLiveData.setValue(LoginStatus.NOT_VALID_EMAIL);
                             return;
                         }
 
                         if (getMainRepository().getDbRepository().isAccountExisting(loginModel.getEmail())) {
+                            Timber.tag(TAG).i("Account already exist");
                             loginStatusMutableLiveData.setValue(LoginStatus.ALREADY_EXIST);
+                            return;
+                        }
+
+                        if (isPasswordNotNull()
+                                && !password.getValue().equals(confirmPassword.getValue())) {
+                            Timber.tag(TAG).i("Password not match");
+                            loginStatusMutableLiveData.setValue(LoginStatus.PASSWORD_NOT_MATCH);
+                            return;
+                        }
+
+                        if (isSomeFieldsNull()) {
+                            Timber.tag(TAG).i("Some fields is/are null");
+                            loginStatusMutableLiveData.setValue(LoginStatus.FILL_UP_ALL_FIELDS);
                             return;
                         }
 
                         getMainRepository().getDbRepository()
                                 .insertLogin(new LoginEntity(loginModel.getEmail(), loginModel.getPassword()));
+                        Timber.tag(TAG).i("Account created!");
                         loginStatusMutableLiveData.setValue(LoginStatus.SUCCESS);
+                        clearFields(false);
                         disposable.dispose();
                     }
                 }, new Consumer<Throwable>() {
@@ -80,6 +146,34 @@ public class LoginViewModel extends MainViewModel {
                         loginStatusMutableLiveData.setValue(LoginStatus.ERROR);
                     }
                 });
+    }
+
+    public boolean isPasswordNotNull() {
+        return !Utils.isStringNullOrEmpty(confirmPassword.getValue())
+                && !Utils.isStringNullOrEmpty(password.getValue());
+    }
+
+    public boolean isSomeFieldsNull() {
+        return (Utils.isStringNullOrEmpty(email.getValue())
+                || Utils.isStringNullOrEmpty(password.getValue())
+                || Utils.isStringNullOrEmpty(confirmPassword.getValue()));
+    }
+
+    public boolean isEmpty() {
+        return (Utils.isStringNullOrEmpty(loginEmail.getValue())
+                || Utils.isStringNullOrEmpty(loginPassword.getValue()));
+    }
+
+    public void clearFields(boolean isLogin) {
+        loginModel.clear();
+        if (isLogin) {
+            loginEmail.setValue("");
+            loginPassword.setValue("");
+        } else {
+            email.setValue("");
+            password.setValue("");
+            confirmPassword.setValue("");
+        }
     }
 
     public LiveData<LoginStatus> getLoginStatusAsLiveData() {

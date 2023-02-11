@@ -1,5 +1,6 @@
 package com.denver.weather_gcash_app.presentation.fragment.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,14 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.denver.weather_gcash_app.R;
 import com.denver.weather_gcash_app.databinding.ItemTabLoginBinding;
+import com.denver.weather_gcash_app.domain.enums.LoginStatus;
+import com.denver.weather_gcash_app.helper.CustomDialogBuilder;
+import com.denver.weather_gcash_app.presentation.activity.CurrentWeatherActivity;
 import com.denver.weather_gcash_app.presentation.base.BaseFragment;
 import com.denver.weather_gcash_app.presentation.viewmodel.LoginViewModel;
 import com.jakewharton.rxbinding3.view.RxView;
@@ -28,14 +33,8 @@ import kotlin.Unit;
 import timber.log.Timber;
 
 public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, LoginViewModel> {
-    private EditText mTxtUsername;
-    private EditText mTxtPassword;
-    private Button mBtnLogin;
-
     @Inject
     ViewModelProvider.Factory viewModelFactory;
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,8 +53,7 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initDesign(view);
-        initButton();
+        initResult();
     }
 
     @Override
@@ -76,35 +74,57 @@ public class ItemLoginTabFragment extends BaseFragment<ItemTabLoginBinding, Logi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!mCompositeDisposable.isDisposed() || mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-        }
     }
 
-    private void initDesign(View view) {
-        mTxtUsername = view.findViewById(R.id.edit_text_username);
-        mTxtPassword = view.findViewById(R.id.edit_text_password);
-        mBtnLogin = view.findViewById(R.id.button_login);
-    }
-
-    private void initButton() {
-        mCompositeDisposable.add(RxView.clicks(mBtnLogin)
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .subscribe(new Consumer<Unit>() {
-                    @Override
-                    public void accept(Unit unit) throws Exception {
-                        Timber.tag("XXXX").e("CLICKABLE");
-                        login(mTxtUsername.getText().toString(), mTxtPassword.getText().toString());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                    }
-                }));
-    }
-
-    private void login(String email, String password) {
-        getViewModel().login(email, password);
+    private void initResult() {
+        getViewDataBinding().getLoginViewModel().getLoginStatusAsLiveData().observe(getViewLifecycleOwner(), new Observer<LoginStatus>() {
+            @Override
+            public void onChanged(LoginStatus loginStatus) {
+                switch (loginStatus) {
+                    case LOGIN_SUCCESS:
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(getActivity(), CurrentWeatherActivity.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            }
+                        };
+                        CustomDialogBuilder.oneButtonDialogBox(
+                                getContext(),
+                                LoginStatus.SUCCESS,
+                                "Success!!",
+                                runnable
+                        );
+                        break;
+                    case FILL_UP_ALL_FIELDS:
+                        CustomDialogBuilder.oneButtonDialogBox(
+                                getContext(),
+                                LoginStatus.FILL_UP_ALL_FIELDS,
+                                "Some fields is/are empty!!",
+                                null
+                        );
+                        break;
+                    case LOGIN_FAILED:
+                        CustomDialogBuilder.oneButtonDialogBox(
+                                getContext(),
+                                LoginStatus.LOGIN_FAILED,
+                                "Failed!!",
+                                null
+                        );
+                        break;
+                    case NOT_VALID_EMAIL:
+                        CustomDialogBuilder.oneButtonDialogBox(
+                                getContext(),
+                                LoginStatus.NOT_VALID_EMAIL,
+                                "Invalid email!!",
+                                null
+                        );
+                        break;
+                    case ERROR:
+                        break;
+                }
+            }
+        });
     }
 }

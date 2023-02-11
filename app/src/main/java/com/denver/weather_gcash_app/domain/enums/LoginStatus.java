@@ -6,5 +6,7 @@ public enum LoginStatus {
     ALREADY_EXIST,
     SUCCESS,
     NOT_VALID_EMAIL,
-    ERROR
+    PASSWORD_NOT_MATCH,
+    FILL_UP_ALL_FIELDS,
+    ERROR,
 }
