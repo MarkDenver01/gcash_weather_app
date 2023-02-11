@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Container GRAY rectangle -->
+    <item>
+        <shape android:shape="rectangle">
+
+            <size
+                android:width="250dp"
+                android:height="180dp" />
+
+            <solid
+                android:color="@color/bg_footer" />
+        </shape>
+    </item>
+
+    <!-- Top WHITE oval shape -->
+    <item
+        android:left="-60dp"
+        android:right="-60dp"
+        android:top="-125dp"
+        android:bottom="150dp">
+
+        <shape android:shape="oval">
+
+            <solid
+                android:color="@color/bg_app" />
+        </shape>
+    </item>
+</layer-list>
