@@ -17,7 +17,7 @@ public class ForecastWeatherResponse implements Serializable {
     private int cnt;
     @Expose
     @SerializedName("list")
-    private List list;
+    private java.util.List<List> list;
     @Expose
     @SerializedName("city")
     private City city;
@@ -34,7 +34,7 @@ public class ForecastWeatherResponse implements Serializable {
         return cnt;
     }
 
-    public List getList() {
+    public java.util.List<List> getList() {
         return list;
     }
 
