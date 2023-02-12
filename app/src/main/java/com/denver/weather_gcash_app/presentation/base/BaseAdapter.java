@@ -3,6 +3,8 @@ package com.denver.weather_gcash_app.presentation.base;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.denver.weather_gcash_app.helper.Utils;
+
 import java.util.List;
 
 public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {

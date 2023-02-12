@@ -5,9 +5,11 @@ import static com.denver.weather_gcash_app.helper.Utils.convertDblToStr;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,16 +17,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.denver.weather_gcash_app.BR;
 import com.denver.weather_gcash_app.R;
 import com.denver.weather_gcash_app.data.response.current_weathers.CurrentWeatherResponse;
 import com.denver.weather_gcash_app.data.response.forecast_weathers.ForecastWeatherResponse;
+import com.denver.weather_gcash_app.data.response.forecast_weathers.List;
 import com.denver.weather_gcash_app.databinding.ActivityCurrentWeatherBinding;
 import com.denver.weather_gcash_app.domain.enums.AppStatus;
 import com.denver.weather_gcash_app.helper.CustomDialogBuilder;
 import com.denver.weather_gcash_app.helper.Utils;
 import com.denver.weather_gcash_app.helper.provider.GeoLocationService;
+import com.denver.weather_gcash_app.presentation.adapter.CurrentWeatherAdapter;
 import com.denver.weather_gcash_app.presentation.base.BaseActivity;
 import com.denver.weather_gcash_app.presentation.viewmodel.WeatherViewModel;
+import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -33,25 +39,34 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.Unit;
 import timber.log.Timber;
 
-public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherBinding, WeatherViewModel> {
+public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherBinding, WeatherViewModel>
+        implements CurrentWeatherAdapter.ItemAdapterListener {
     @Inject
     Context context;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    @Inject
+    CurrentWeatherAdapter currentWeatherAdapter;
+
     private Disposable disposable;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private GeoLocationService geoLocationService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkLocationPermission();
+        currentWeatherAdapter.setItemAdapterListener(this);
+        initButton();
     }
 
     @Override
@@ -60,11 +75,20 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
         if (!disposable.isDisposed() || disposable != null) {
             disposable.dispose();
         }
+
+        if (!compositeDisposable.isDisposed() || compositeDisposable != null) {
+            compositeDisposable.dispose();
+        }
     }
 
     @Override
     public int getLayoutId() {
         return R.layout.activity_current_weather;
+    }
+
+    @Override
+    public int getBindingVariables() {
+        return BR.weatherViewModel;
     }
 
     @Override
@@ -113,6 +137,7 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
                             return;
                         }
 
+                        getDataBinding().buttonView.setEnabled(false);
                         initGeoLocation();
                         initResult();
                         disposable.dispose();
@@ -167,15 +192,21 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
                 String temp = String.format(Locale.getDefault(), "%.0f", celcius);
                 String wind = "Wind\n{spd: " + currentWeatherResponse.getWind().getSpeed() + "km/hr | deg: " + currentWeatherResponse.getWind().getDeg() + "% }";
                 String humidity = "Humidity: " + currentWeatherResponse.getMain().getHumidity() + "%";
+                String sunRiseSunSet = "sunrise: " + Utils.getTime(currentWeatherResponse.getSys().getSunrise()) + "\nsunset:" + Utils.getTime(currentWeatherResponse.getSys().getSunset());
                 getDataBinding().textTemperature.setText(temp + "°C");
                 getDataBinding().textCountry.setText(currentWeatherResponse.getSys().getCountry());
                 getDataBinding().textName.setText(currentWeatherResponse.getName());
                 getDataBinding().textHumidity.setText(humidity);
+                getDataBinding().textRiseSet.setText(sunRiseSunSet);
                 getDataBinding().textWindVelocity.setText(wind);
                 getDataBinding().textDate.setText(Utils.getDate(currentWeatherResponse.getDt()));
                 getDataBinding().textDescription.setText(currentWeatherResponse.getWeatherList().get(0).getMain());
                 getDataBinding().iconTemp.setAnimation(Utils.getWeatherStatus(currentWeatherResponse.getWeatherList().get(0).getId()));
                 getDataBinding().iconTemp.playAnimation();
+
+                // set weather id
+                Timber.e("xxxxx currentid: " + currentWeatherResponse.getId());
+                getViewModel().setWeatherId(currentWeatherResponse.getId());
 
                 // call weather forecast
                 getViewModel().getForecastWeather(currentWeatherResponse.getId());
@@ -185,16 +216,43 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
         getViewModel().getForecastWeatherAsLiveData().observe(this, new Observer<ForecastWeatherResponse>() {
             @Override
             public void onChanged(ForecastWeatherResponse forecastWeatherResponse) {
-                Timber.e("xxxxxx : " + forecastWeatherResponse.getCity().getCountry());
+                currentWeatherAdapter.add(forecastWeatherResponse.getList());
+                displayRecyclerView();
+                getDataBinding().buttonView.setEnabled(true);
             }
         });
     }
 
-    private void listWeathers() {
+    private void displayRecyclerView() {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(
                 this,
-                LinearLayoutManager.HORIZONTAL,
+                LinearLayoutManager.VERTICAL,
                 false);
         getDataBinding().listWeather.setLayoutManager(layoutManager);
+        getDataBinding().listWeather.setAdapter(currentWeatherAdapter);
+    }
+
+    @Override
+    public void onItemClick(View view, List item) {
+
+    }
+
+    private void initButton() {
+        compositeDisposable.add(RxView.clicks(getDataBinding().buttonView)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<Unit>() {
+                    @Override
+                    public void accept(Unit unit) throws Exception {
+                        Intent intent = new Intent(context, FetchWeatherActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                    }
+                }));
     }
 }

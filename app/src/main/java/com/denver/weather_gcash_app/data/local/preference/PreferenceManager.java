@@ -27,4 +27,19 @@ public class PreferenceManager implements SharedPrefsData {
     public boolean isLoggedIn() {
         return sharedPreferences.getBoolean("logged_in_key", false);
     }
+
+    @Override
+    public void setId(int id) {
+        sharedPreferences.edit().putInt("weather_id_key", id).commit();
+    }
+
+    @Override
+    public int getId() {
+        return sharedPreferences.getInt("weather_id_key", 0);
+    }
+
+    @Override
+    public void clear(String key) {
+        sharedPreferences.edit().remove(key).commit();
+    }
 }

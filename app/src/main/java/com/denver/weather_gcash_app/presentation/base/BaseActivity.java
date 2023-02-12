@@ -18,9 +18,12 @@ public abstract class BaseActivity<D extends ViewDataBinding, V extends BaseView
         dataBinding = DataBindingUtil.setContentView(this, getLayoutId());
         viewModel = initViewModel();
         getDataBinding().setLifecycleOwner(this);
+        getDataBinding().setVariable(getBindingVariables(), getViewModel());
     }
 
     public abstract int getLayoutId();
+
+    public abstract int getBindingVariables();
 
     public abstract V initViewModel();
 

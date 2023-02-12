@@ -57,6 +57,11 @@ public class InitialActivity extends BaseActivity<ActivitySplashScreenBinding, L
     }
 
     @Override
+    public int getBindingVariables() {
+        return 0;
+    }
+
+    @Override
     public LoginViewModel initViewModel() {
         return new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
     }

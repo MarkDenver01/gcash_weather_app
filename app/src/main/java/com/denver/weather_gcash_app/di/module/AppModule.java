@@ -21,6 +21,9 @@ import com.denver.weather_gcash_app.domain.abstraction.RemoteDataRepository;
 import com.denver.weather_gcash_app.domain.abstraction.SharedPrefsData;
 import com.denver.weather_gcash_app.helper.Constants;
 import com.denver.weather_gcash_app.helper.Utils;
+import com.denver.weather_gcash_app.presentation.adapter.CurrentWeatherAdapter;
+
+import java.util.ArrayList;
 
 import javax.inject.Singleton;
 
@@ -137,5 +140,11 @@ public class AppModule {
     @Singleton
     public static SharedPreferences provideSharedPreferences(Context context) {
         return context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE);
+    }
+
+    @Provides
+    @Singleton
+    CurrentWeatherAdapter provideAdapter() {
+        return new CurrentWeatherAdapter(new ArrayList<>());
     }
 }

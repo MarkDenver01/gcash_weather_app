@@ -130,4 +130,17 @@ public class WeatherViewModel extends MainViewModel {
     public LiveData<CurrentWeatherResponse> getCurrentWeatherAsLiveData() {
         return currentWeatherMutableLiveData;
     }
+
+    public void setWeatherId(int id) {
+        getMainRepository().getSharedPref().setId(id);
+    }
+
+    public int getWeatherId() {
+        Timber.e("xxxxx id: " + getMainRepository().getSharedPref().getId());
+        return getMainRepository().getSharedPref().getId();
+    }
+
+    public void deleteWeatherId() {
+        getMainRepository().getSharedPref().clear("weather_id_key");
+    }
 }

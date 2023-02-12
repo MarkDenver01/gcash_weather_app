@@ -30,4 +30,13 @@
     <color name="button_effect_2">#AB47BC</color>
     <color name="button_effect_3">#9C27B0</color>
     <color name="weather_item_color">#D32F2F</color>
+    <color name="storm_weather">#B71C1C</color>
+    <color name="rainy_weather">#9E9E9E</color>
+    <color name="snow_weather">#42A5F5</color>
+    <color name="cloudy_weather">#2196F3</color>
+    <color name="clear_day">#90CAF9</color>
+    <color name="few_clouds">#BBDEFB</color>
+    <color name="broken_clouds">#E3F2FD</color>
+    <color name="unknown">#6A1B9A</color>
+    <color name="overcast_cloud">#D32F2F</color>
 </resources>

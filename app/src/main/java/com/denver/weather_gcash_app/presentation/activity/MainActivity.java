@@ -33,6 +33,11 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     }
 
     @Override
+    public int getBindingVariables() {
+        return 0;
+    }
+
+    @Override
     public MainViewModel initViewModel() {
         return new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
     }
