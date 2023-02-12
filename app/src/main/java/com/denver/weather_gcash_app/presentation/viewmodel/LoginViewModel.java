@@ -61,7 +61,6 @@ public class LoginViewModel extends MainViewModel {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         loginModel = new LoginModel(loginEmail.getValue(), loginPassword.getValue());
-                        Timber.tag("xxxxxx").e("xxxx e: " + loginModel.getEmail() + " p : " + loginModel.getPassword());
                         if (!loginModel.isEmailValid()) {
                             Timber.tag(TAG).i("Invalid email address");
                             getMainRepository().getSharedPref().setIsLoggedIn(false);

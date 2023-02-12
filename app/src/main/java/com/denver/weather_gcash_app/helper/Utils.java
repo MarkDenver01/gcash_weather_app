@@ -94,7 +94,6 @@ public class Utils {
     }
 
     public static int getChangeColor(int id) {
-        Timber.e("xxxx color: " + id);
         if (id / 100 == 2) {
             return R.color.storm_weather;
         } else if (id / 100 == 3) {

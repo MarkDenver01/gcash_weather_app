@@ -205,7 +205,6 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
                 getDataBinding().iconTemp.playAnimation();
 
                 // set weather id
-                Timber.e("xxxxx currentid: " + currentWeatherResponse.getId());
                 getViewModel().setWeatherId(currentWeatherResponse.getId());
 
                 // call weather forecast

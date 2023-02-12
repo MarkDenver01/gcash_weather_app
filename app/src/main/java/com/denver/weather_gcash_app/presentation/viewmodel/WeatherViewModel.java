@@ -136,7 +136,6 @@ public class WeatherViewModel extends MainViewModel {
     }
 
     public int getWeatherId() {
-        Timber.e("xxxxx id: " + getMainRepository().getSharedPref().getId());
         return getMainRepository().getSharedPref().getId();
     }
 
