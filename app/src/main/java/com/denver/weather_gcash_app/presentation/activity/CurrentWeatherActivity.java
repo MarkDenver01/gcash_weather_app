@@ -201,7 +201,8 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
                 getDataBinding().textWindVelocity.setText(wind);
                 getDataBinding().textDate.setText(Utils.getDate(currentWeatherResponse.getDt()));
                 getDataBinding().textDescription.setText(currentWeatherResponse.getWeatherList().get(0).getMain());
-                getDataBinding().iconTemp.setAnimation(Utils.getWeatherStatus(currentWeatherResponse.getWeatherList().get(0).getId()));
+                getDataBinding().iconTemp.setAnimation(Utils.getCurrentWeatherStatus(currentWeatherResponse.getWeatherList().get(0).getId(),
+                        currentWeatherResponse.getSys().getSunset()));
                 getDataBinding().iconTemp.playAnimation();
 
                 // set weather id

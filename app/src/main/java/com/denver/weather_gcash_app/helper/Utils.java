@@ -5,10 +5,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.format.DateFormat;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.denver.weather_gcash_app.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -32,12 +36,6 @@ public class Utils {
         return String.valueOf(val);
     }
 
-    public static String getDateAndTime(long time) {
-        Calendar cal = Calendar.getInstance(Locale.getDefault());
-        cal.setTimeInMillis(time * 1000);
-        String date = DateFormat.format("yyyy-MM-dd hh:mm:ss a", cal).toString();
-        return date;
-    }
 
     public static String getDate(long time) {
         Calendar cal = Calendar.getInstance(Locale.getDefault());
@@ -51,6 +49,29 @@ public class Utils {
         cal.setTimeInMillis(time * 1000);
         String date = DateFormat.format("hh:mm a", cal).toString();
         return date;
+    }
+
+    public static boolean isSunsetDetected(long time) {
+        try {
+            String nightString = "18:00:00";
+            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+            Date date1 = sdf1.parse(nightString);
+
+            String dayString = "06:00:00";
+            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
+            Date date2 = sdf2.parse(dayString);
+
+            long startDate = date1.getTime();
+            long endDate = date2.getTime();
+
+            if (time == startDate && (time <= endDate)) {
+                return true;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static String setDateAndTimeFormat(String dateTime) {
@@ -69,6 +90,42 @@ public class Utils {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return simpleDateFormat.format(cal.getTime());
+    }
+
+    public static int getCurrentWeatherStatus(int id, int sunset) {
+        if (id / 100 == 2) {
+            return R.raw.storm_weather;
+        } else if (id / 100 == 3) {
+            return R.raw.rainy_weather;
+        } else if (id / 100 == 5) {
+            return R.raw.rainy_weather;
+        } else if (id / 100 == 8) {
+            if (Utils.isSunsetDetected(sunset)) {
+                return R.raw.moon;
+            } else {
+                return R.raw.few_clouds;
+            }
+        } else if (id == 800) {
+            if (Utils.isSunsetDetected(sunset)) {
+                return R.raw.moon;
+            } else {
+                return R.raw.few_clouds;
+            }
+        } else if (id == 801) {
+            if (Utils.isSunsetDetected(sunset)) {
+                return R.raw.moon;
+            } else {
+                return R.raw.few_clouds;
+            }
+        } else if (id == 803) {
+            if (Utils.isSunsetDetected(sunset)) {
+                return R.raw.moon;
+            } else {
+                return R.raw.few_clouds;
+            }
+        } else {
+            return R.raw.unknown;
+        }
     }
 
     public static int getWeatherStatus(int id) {
