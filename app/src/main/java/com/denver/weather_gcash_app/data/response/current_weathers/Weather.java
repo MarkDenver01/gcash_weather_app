@@ -12,7 +12,7 @@ public class Weather implements Serializable {
     @SerializedName("main")
     private String main;
     @SerializedName("id")
-    private String id;
+    private int id;
 
     public String getIcon() {
         return icon;
@@ -26,7 +26,7 @@ public class Weather implements Serializable {
         return main;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 }

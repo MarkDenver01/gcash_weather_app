@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="currentWeatherViewModel"
-            type="com.denver.weather_gcash_app.presentation.viewmodel.CurrentWeatherViewModel" />
+            name="weatherViewModel"
+            type="com.denver.weather_gcash_app.presentation.viewmodel.WeatherViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,7 +146,6 @@
                                 android:id="@+id/text_wind_velocity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
                                 android:text="Wind velocity"
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp"
@@ -179,27 +178,27 @@
                                 android:layout_gravity="end|bottom"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.943"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.177"
                                 app:lottie_autoPlay="true"
                                 app:lottie_fileName="cloudy.json"
-                                app:layout_constraintHorizontal_bias="0.900"
                                 app:lottie_loop="true" />
 
                             <TextView
                                 android:id="@+id/text_description"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center"
                                 android:gravity="center"
                                 android:text="Desc"
                                 android:textColor="@android:color/white"
                                 android:textSize="15sp"
-                                android:layout_gravity="center"
-                                app:layout_constraintHorizontal_bias=".850"
-                                app:layout_constraintVertical_bias="0.890"
+                                app:layout_constraintVertical_bias="0.600"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/icon_temp"
                                 app:layout_constraintTop_toTopOf="parent" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -229,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="Next Hourly"
+                android:text="Forecast"
                 android:textColor="@color/text_color_weather"
                 android:textSize="17sp"
                 android:textStyle="bold"
@@ -239,16 +238,30 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvListWeather"
-                android:layout_width="match_parent"
+                android:id="@+id/list_weather"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 app:layout_constraintVertical_bias="0"
-                tools:layout_editor_absoluteX="10dp" />
+                tools:listitem="@layout/item_list_weather" />
+
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="23dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

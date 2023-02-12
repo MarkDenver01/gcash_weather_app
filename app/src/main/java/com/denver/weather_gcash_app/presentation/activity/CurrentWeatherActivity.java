@@ -8,27 +8,23 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.denver.weather_gcash_app.MainApplication;
 import com.denver.weather_gcash_app.R;
+import com.denver.weather_gcash_app.data.response.current_weathers.CurrentWeatherResponse;
+import com.denver.weather_gcash_app.data.response.forecast_weathers.ForecastWeatherResponse;
 import com.denver.weather_gcash_app.databinding.ActivityCurrentWeatherBinding;
 import com.denver.weather_gcash_app.domain.enums.AppStatus;
-import com.denver.weather_gcash_app.domain.model.current_weather.CurrentWeatherModel;
-import com.denver.weather_gcash_app.helper.Constants;
 import com.denver.weather_gcash_app.helper.CustomDialogBuilder;
 import com.denver.weather_gcash_app.helper.Utils;
 import com.denver.weather_gcash_app.helper.provider.GeoLocationService;
 import com.denver.weather_gcash_app.presentation.base.BaseActivity;
-import com.denver.weather_gcash_app.presentation.viewmodel.CurrentWeatherViewModel;
+import com.denver.weather_gcash_app.presentation.viewmodel.WeatherViewModel;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -42,21 +38,12 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherBinding, CurrentWeatherViewModel> {
+public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherBinding, WeatherViewModel> {
     @Inject
     Context context;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
-
-    private TextView txtTemperature;
-    private TextView txtCountry;
-    private TextView txtCity;
-    private TextView txtWind;
-    private TextView txtHumidity;
-    private TextView txtDate;
-    private TextView txtDescription;
-    private LottieAnimationView lottieAnimationView;
 
     private Disposable disposable;
     private GeoLocationService geoLocationService;
@@ -64,7 +51,6 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDesign();
         checkLocationPermission();
     }
 
@@ -82,8 +68,8 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
     }
 
     @Override
-    public CurrentWeatherViewModel initViewModel() {
-        return new ViewModelProvider(this, viewModelFactory).get(CurrentWeatherViewModel.class);
+    public WeatherViewModel initViewModel() {
+        return new ViewModelProvider(this, viewModelFactory).get(WeatherViewModel.class);
     }
 
     @Override
@@ -94,17 +80,6 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
             initGeoLocation();
             initResult();
         }
-    }
-
-    private void initDesign() {
-        txtTemperature = findViewById(R.id.text_temperature);
-        txtCountry = findViewById(R.id.text_country);
-        txtCity = findViewById(R.id.text_name);
-        txtHumidity = findViewById(R.id.text_humidity);
-        txtWind = findViewById(R.id.text_wind_velocity);
-        txtDate = findViewById(R.id.text_date);
-        txtDescription = findViewById(R.id.text_description);
-        lottieAnimationView = findViewById(R.id.icon_temp);
     }
 
     private void initGeoLocation() {
@@ -185,42 +160,41 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
     }
 
     private void initResult() {
-        getViewModel().getCurrentWeatherAsLiveData().observe(this, new Observer<CurrentWeatherModel>() {
+        getViewModel().getCurrentWeatherAsLiveData().observe(this, new Observer<CurrentWeatherResponse>() {
             @Override
-            public void onChanged(CurrentWeatherModel currentWeatherModel) {
-                double celsius = Math.round(currentWeatherModel.getCurrentTemperature() - 275.15);
-                txtTemperature.setText(String.format(Locale.getDefault(), "%.0f", celsius) + "°C");
-                txtCountry.setText(currentWeatherModel.getCountry());
-                txtCity.setText(currentWeatherModel.getCity());
-                txtHumidity.setText("Humidity: " + currentWeatherModel.getHumidity() + "%");
-                txtWind.setText("Wind (Speed): " + currentWeatherModel.getSpeed() + "km/hr");
-                txtDate.setText(currentWeatherModel.getCurrentDate());
-                txtDescription.setText(currentWeatherModel.getDescription());
-                lottieAnimationView.setAnimation(getWeatherStatus(currentWeatherModel.getWeatherId()));
-                lottieAnimationView.playAnimation();
+            public void onChanged(CurrentWeatherResponse currentWeatherResponse) {
+                double celcius = Math.round(currentWeatherResponse.getMain().getTemp() - 273.15);
+                String temp = String.format(Locale.getDefault(), "%.0f", celcius);
+                String wind = "Wind\n{spd: " + currentWeatherResponse.getWind().getSpeed() + "km/hr | deg: " + currentWeatherResponse.getWind().getDeg() + "% }";
+                String humidity = "Humidity: " + currentWeatherResponse.getMain().getHumidity() + "%";
+                getDataBinding().textTemperature.setText(temp + "°C");
+                getDataBinding().textCountry.setText(currentWeatherResponse.getSys().getCountry());
+                getDataBinding().textName.setText(currentWeatherResponse.getName());
+                getDataBinding().textHumidity.setText(humidity);
+                getDataBinding().textWindVelocity.setText(wind);
+                getDataBinding().textDate.setText(Utils.getDate(currentWeatherResponse.getDt()));
+                getDataBinding().textDescription.setText(currentWeatherResponse.getWeatherList().get(0).getMain());
+                getDataBinding().iconTemp.setAnimation(Utils.getWeatherStatus(currentWeatherResponse.getWeatherList().get(0).getId()));
+                getDataBinding().iconTemp.playAnimation();
+
+                // call weather forecast
+                getViewModel().getForecastWeather(currentWeatherResponse.getId());
+            }
+        });
+
+        getViewModel().getForecastWeatherAsLiveData().observe(this, new Observer<ForecastWeatherResponse>() {
+            @Override
+            public void onChanged(ForecastWeatherResponse forecastWeatherResponse) {
+                Timber.e("xxxxxx : " + forecastWeatherResponse.getCity().getCountry());
             }
         });
     }
 
-    private int getWeatherStatus(int id) {
-        if (id / 100 == 2) {
-            return R.raw.storm_weather;
-        } else if (id / 100 == 3) {
-            return R.raw.rainy_weather;
-        } else if (id / 100 == 5) {
-            return R.raw.rainy_weather;
-        } else if (id / 100 == 6) {
-            return R.raw.snow_weather;
-        } else if (id / 100 == 8) {
-            return R.raw.cloudy_weather;
-        } else if (id == 800) {
-            return R.raw.clear_day;
-        } else if (id == 801) {
-            return R.raw.few_clouds;
-        } else if (id == 803) {
-            return R.raw.broken_clouds;
-        } else {
-            return R.raw.unknown;
-        }
+    private void listWeathers() {
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        getDataBinding().listWeather.setLayoutManager(layoutManager);
     }
 }

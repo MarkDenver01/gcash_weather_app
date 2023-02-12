@@ -29,4 +29,5 @@
     <color name="button_effect_1">#BA68C8</color>
     <color name="button_effect_2">#AB47BC</color>
     <color name="button_effect_3">#9C27B0</color>
+    <color name="weather_item_color">#D32F2F</color>
 </resources>

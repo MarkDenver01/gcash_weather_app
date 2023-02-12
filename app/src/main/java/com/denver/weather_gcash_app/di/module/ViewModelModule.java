@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.denver.weather_gcash_app.ViewModelProviderFactory;
 import com.denver.weather_gcash_app.di.ViewModelKey;
-import com.denver.weather_gcash_app.presentation.viewmodel.CurrentWeatherViewModel;
+import com.denver.weather_gcash_app.presentation.viewmodel.WeatherViewModel;
 import com.denver.weather_gcash_app.presentation.viewmodel.LoginViewModel;
 
 import dagger.Binds;
@@ -21,8 +21,8 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CurrentWeatherViewModel.class)
-    public abstract ViewModel bindCurrentWeatherViewModel(CurrentWeatherViewModel currentWeatherViewModel);
+    @ViewModelKey(WeatherViewModel.class)
+    public abstract ViewModel bindCurrentWeatherViewModel(WeatherViewModel weatherViewModel);
 
     @Binds
     public abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelProviderFactory viewModelProviderFactory);
