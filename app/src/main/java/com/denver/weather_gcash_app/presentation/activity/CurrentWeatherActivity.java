@@ -64,6 +64,7 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDataBinding().buttonView.setEnabled(false);
         checkLocationPermission();
         currentWeatherAdapter.setItemAdapterListener(this);
         initButton();
@@ -137,7 +138,6 @@ public class CurrentWeatherActivity extends BaseActivity<ActivityCurrentWeatherB
                             return;
                         }
 
-                        getDataBinding().buttonView.setEnabled(false);
                         initGeoLocation();
                         initResult();
                         disposable.dispose();
