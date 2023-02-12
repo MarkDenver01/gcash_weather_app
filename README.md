@@ -9,8 +9,12 @@ If in-case cuberto liquid swipe is error, please do the following:
 1. Go to Project folder structure
 2. Open github.properties
 3. Input the following:
+
 gpr.usr = 20502334
+
 gpr.key =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
+
+
 4. Saved and rebuild the app
 
 Following Used:
