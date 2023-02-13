@@ -49,3 +49,11 @@ Library used:
 6. Room Database
 7. Dependency injection
 
+Task:
+1. [OK] - Should contains the current weather
+2. [OK] - Should contains the list of weather every time the user open the app
+3. [OK] - Has sign in and registration
+4. [OK] - Current location ( City and Country )
+5. [OK] - Current temperature in Celsius
+6. [OK] - Time of Sunrise and Sunset
+7. [OK] - An icon indicating the current weather, if it is sunny then you will use a sun icon, if it is raining then a rain icon. NOTE instead of a sun icon you must display a moon icon if it is past 6 PM. (NOTE: Change the time format of your phone into Military time (24)).
