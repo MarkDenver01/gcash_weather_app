@@ -9,13 +9,27 @@ How to set up the public api key
 2. Public API KEY: 8d9f418904b3834e5f8f7cc3689f0c5c
 
 If in-case cuberto liquid swipe is error, please do the following:
-1. Go to Project folder structure
-2. Open github.properties
-3. Input the following:
 
-gpr.usr = 20502334
+1. Generate a Personal Access Token for GitHub
 
-gpr.key =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
+Inside you GitHub account:
+
+Settings -> Developer Settings -> Personal Access Tokens -> Generate new token
+
+Make sure you select the following scopes (“ read:packages”) and Generate a token
+After Generating make sure to copy your new personal access token. You cannot see it again! The only option is to generate a new key.
+
+2. Get your user id from:
+
+API: https://api.github.com/users/<your_username>
+
+3. Go to Project folder structure
+4. Open github.properties
+5. Input the following:
+
+gpr.usr = your_user_id
+
+gpr.key = your_access_token_key
 
 
 4. Saved and rebuild the app
