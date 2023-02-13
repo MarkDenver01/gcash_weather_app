@@ -32,6 +32,7 @@ import com.denver.weather_gcash_app.presentation.base.BaseActivity;
 import com.denver.weather_gcash_app.presentation.viewmodel.WeatherViewModel;
 import com.jakewharton.rxbinding3.view.RxView;
 
+import java.text.ParseException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 

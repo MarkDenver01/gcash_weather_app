@@ -51,27 +51,30 @@ public class Utils {
         return date;
     }
 
-    public static boolean isSunsetDetected(long time) {
+    public static boolean isSunsetDetect(long sunrise) {
+        boolean isDetect = false;
+        // sunset
+        int sunset = 36000000; //default
+        Calendar currentCal = Calendar.getInstance(Locale.getDefault());
+        String currentTime = DateFormat.format("HH:mm:ss", currentCal).toString();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date currentDate = null;
         try {
-            String nightString = "18:00:00";
-            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
-            Date date1 = sdf1.parse(nightString);
 
-            String dayString = "06:00:00";
-            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
-            Date date2 = sdf2.parse(dayString);
-
-            long startDate = date1.getTime();
-            long endDate = date2.getTime();
-
-            if (time == startDate && (time <= endDate)) {
-                return true;
-            }
-
+            currentDate = dateFormat.parse(currentTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return false;
+        long currTime = currentDate.getTime();
+
+        if (currTime >= sunset) {
+            Timber.i("Night at start 6pm...");
+            isDetect = true;
+        } else if (currTime <= sunrise) {
+            Timber.e("Sunrise is starting...");
+            isDetect = false;
+        }
+        return isDetect;
     }
 
     public static String setDateAndTimeFormat(String dateTime) {
@@ -100,25 +103,25 @@ public class Utils {
         } else if (id / 100 == 5) {
             return R.raw.rainy_weather;
         } else if (id / 100 == 8) {
-            if (Utils.isSunsetDetected(sunset)) {
+            if (Utils.isSunsetDetect(sunset)) {
                 return R.raw.moon;
             } else {
                 return R.raw.few_clouds;
             }
         } else if (id == 800) {
-            if (Utils.isSunsetDetected(sunset)) {
+            if (Utils.isSunsetDetect(sunset)) {
                 return R.raw.moon;
             } else {
                 return R.raw.few_clouds;
             }
         } else if (id == 801) {
-            if (Utils.isSunsetDetected(sunset)) {
+            if (Utils.isSunsetDetect(sunset)) {
                 return R.raw.moon;
             } else {
                 return R.raw.few_clouds;
             }
         } else if (id == 803) {
-            if (Utils.isSunsetDetected(sunset)) {
+            if (Utils.isSunsetDetect(sunset)) {
                 return R.raw.moon;
             } else {
                 return R.raw.few_clouds;
