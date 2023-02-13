@@ -30,3 +30,11 @@ Library used:
 5. Cuberto
 6. Room Database
 7. Dependency injection
+
+Output:
+
+
+![weather_app](https://user-images.githubusercontent.com/20502334/218387747-32d36071-16eb-435a-8e44-74c88cd53636.png)
+
+
+
