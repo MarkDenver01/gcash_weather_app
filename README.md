@@ -1,5 +1,8 @@
 # gcash_weather_app
 
+![weather_app](https://user-images.githubusercontent.com/20502334/218387747-32d36071-16eb-435a-8e44-74c88cd53636.png)
+![clean_arch_mvvm](https://user-images.githubusercontent.com/20502334/218391312-1baf500a-7aec-4458-a8e6-89f04d9e5c9b.png)
+
 
 How to set up the public api key
 1. Go to data folder > remote > client then open the ApiClient.java
@@ -27,14 +30,8 @@ Library used:
 2. Retrofit
 3. OkHttp
 4. Lottie
-5. Cuberto
+5. Cuberto Liquid Swipe
+
 6. Room Database
 7. Dependency injection
-
-Output:
-
-
-![weather_app](https://user-images.githubusercontent.com/20502334/218387747-32d36071-16eb-435a-8e44-74c88cd53636.png)
-
-
 
